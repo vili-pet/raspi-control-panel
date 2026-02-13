@@ -11,9 +11,12 @@ import Services from "./pages/Services";
 import Network from "./pages/Network";
 import N8n from "./pages/N8n";
 import Processes from "./pages/Processes";
+import Login from "./pages/Login";
+import { useCallback, useEffect, useState } from "react";
+
+const isStandalone = import.meta.env.VITE_OAUTH_PORTAL_URL === 'disabled';
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
@@ -24,26 +27,56 @@ function Router() {
       <Route path={"/network"} component={Network} />
       <Route path={"/n8n"} component={N8n} />
       <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
+function AuthGate({ children }: { children: React.ReactNode }) {
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+
+  const checkAuth = useCallback(async () => {
+    try {
+      const res = await fetch("/api/panel-auth/check", { credentials: "include" });
+      const data = await res.json();
+      setAuthenticated(data.authenticated);
+    } catch {
+      setAuthenticated(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isStandalone) {
+      checkAuth();
+    } else {
+      setAuthenticated(true);
+    }
+  }, [checkAuth]);
+
+  if (authenticated === null) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Ladataan...</div>
+      </div>
+    );
+  }
+
+  if (!authenticated) {
+    return <Login onLogin={() => setAuthenticated(true)} />;
+  }
+
+  return <>{children}</>;
+}
 
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="dark"
-      >
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <AuthGate>
+            <Router />
+          </AuthGate>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

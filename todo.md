@@ -30,3 +30,9 @@
 - [x] Remove OAuth dependency for standalone Raspberry Pi deployment
 - [x] Make authentication optional when OAUTH_SERVER_URL is disabled
 - [ ] Test application works without Manus services
+
+## Password Authentication
+- [x] Add backend login endpoint with password verification
+- [x] Add middleware to protect all API routes
+- [x] Create login page UI
+- [x] Store password in .env file

@@ -28,7 +28,7 @@ export const terminalRouter = router({
         if (db) {
           try {
             await db.insert(commandHistory).values({
-              userId: ctx.user.id,
+              userId: ctx.user?.id ?? 0,
               command: input.command,
               output,
               exitCode: 0,
@@ -51,7 +51,7 @@ export const terminalRouter = router({
         if (db) {
           try {
             await db.insert(commandHistory).values({
-              userId: ctx.user.id,
+              userId: ctx.user?.id ?? 0,
               command: input.command,
               output: output || error.message,
               exitCode,
