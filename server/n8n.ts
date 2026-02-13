@@ -1,12 +1,12 @@
 import { exec } from "child_process";
 import { promisify } from "util";
-import { protectedProcedure, router } from "./_core/trpc";
+import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 
 const execAsync = promisify(exec);
 
 export const n8nRouter = router({
-  getStatus: protectedProcedure.query(async () => {
+  getStatus: publicProcedure.query(async () => {
     try {
       const { stdout } = await execAsync("pgrep -f n8n");
       const isRunning = stdout.trim().length > 0;
@@ -37,7 +37,7 @@ export const n8nRouter = router({
     }
   }),
 
-  start: protectedProcedure.mutation(async () => {
+  start: publicProcedure.mutation(async () => {
     try {
       await execAsync("nohup n8n start > /tmp/n8n.log 2>&1 &");
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -51,7 +51,7 @@ export const n8nRouter = router({
     }
   }),
 
-  stop: protectedProcedure.mutation(async () => {
+  stop: publicProcedure.mutation(async () => {
     try {
       await execAsync("pkill -f n8n");
       return {
@@ -63,7 +63,7 @@ export const n8nRouter = router({
     }
   }),
 
-  restart: protectedProcedure.mutation(async () => {
+  restart: publicProcedure.mutation(async () => {
     try {
       await execAsync("pkill -f n8n");
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -79,7 +79,7 @@ export const n8nRouter = router({
     }
   }),
 
-  getLogs: protectedProcedure
+  getLogs: publicProcedure
     .input(
       z.object({
         lines: z.number().default(50),

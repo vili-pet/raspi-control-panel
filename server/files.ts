@@ -1,4 +1,4 @@
-import { protectedProcedure, router } from "./_core/trpc";
+import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import fs from "fs/promises";
 import path from "path";
@@ -19,7 +19,7 @@ function sanitizePath(userPath: string): string {
 }
 
 export const filesRouter = router({
-  browse: protectedProcedure
+  browse: publicProcedure
     .input(
       z.object({
         path: z.string().default(""),
@@ -66,7 +66,7 @@ export const filesRouter = router({
       }
     }),
 
-  delete: protectedProcedure
+  delete: publicProcedure
     .input(
       z.object({
         path: z.string(),
@@ -93,7 +93,7 @@ export const filesRouter = router({
       }
     }),
 
-  createFolder: protectedProcedure
+  createFolder: publicProcedure
     .input(
       z.object({
         path: z.string(),
@@ -116,7 +116,7 @@ export const filesRouter = router({
       }
     }),
 
-  readFile: protectedProcedure
+  readFile: publicProcedure
     .input(
       z.object({
         path: z.string(),
@@ -136,7 +136,7 @@ export const filesRouter = router({
       }
     }),
 
-  writeFile: protectedProcedure
+  writeFile: publicProcedure
     .input(
       z.object({
         path: z.string(),

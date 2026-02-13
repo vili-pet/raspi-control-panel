@@ -1,12 +1,12 @@
 import { exec } from "child_process";
 import { promisify } from "util";
-import { protectedProcedure, router } from "./_core/trpc";
+import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 
 const execAsync = promisify(exec);
 
 export const servicesRouter = router({
-  list: protectedProcedure.query(async () => {
+  list: publicProcedure.query(async () => {
     try {
       const { stdout } = await execAsync(
         "systemctl list-units --type=service --all --no-pager --no-legend"
@@ -42,7 +42,7 @@ export const servicesRouter = router({
     }
   }),
 
-  getStatus: protectedProcedure
+  getStatus: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -57,7 +57,7 @@ export const servicesRouter = router({
       }
     }),
 
-  start: protectedProcedure
+  start: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -72,7 +72,7 @@ export const servicesRouter = router({
       }
     }),
 
-  stop: protectedProcedure
+  stop: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -87,7 +87,7 @@ export const servicesRouter = router({
       }
     }),
 
-  restart: protectedProcedure
+  restart: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -102,7 +102,7 @@ export const servicesRouter = router({
       }
     }),
 
-  enable: protectedProcedure
+  enable: publicProcedure
     .input(
       z.object({
         name: z.string(),
@@ -117,7 +117,7 @@ export const servicesRouter = router({
       }
     }),
 
-  disable: protectedProcedure
+  disable: publicProcedure
     .input(
       z.object({
         name: z.string(),

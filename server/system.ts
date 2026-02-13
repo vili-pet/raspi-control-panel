@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 import { promisify } from "util";
-import { protectedProcedure, router } from "./_core/trpc";
+import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import os from "os";
 import fs from "fs/promises";
@@ -9,7 +9,7 @@ import path from "path";
 const execAsync = promisify(exec);
 
 export const systemRouter = router({
-  getMetrics: protectedProcedure.query(async () => {
+  getMetrics: publicProcedure.query(async () => {
     try {
       const cpuUsage = await getCPUUsage();
       const memoryInfo = getMemoryInfo();
@@ -33,7 +33,7 @@ export const systemRouter = router({
     }
   }),
 
-  getNetworkInfo: protectedProcedure.query(async () => {
+  getNetworkInfo: publicProcedure.query(async () => {
     try {
       const interfaces = os.networkInterfaces();
       const networkInfo: Array<{
@@ -78,7 +78,7 @@ export const systemRouter = router({
     }
   }),
 
-  getProcesses: protectedProcedure.query(async () => {
+  getProcesses: publicProcedure.query(async () => {
     try {
       const { stdout } = await execAsync(
         "ps aux --sort=-%cpu | head -20"
@@ -109,7 +109,7 @@ export const systemRouter = router({
     }
   }),
 
-  killProcess: protectedProcedure
+  killProcess: publicProcedure
     .input(z.object({ pid: z.string() }))
     .mutation(async ({ input }) => {
       try {

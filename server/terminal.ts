@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 import { promisify } from "util";
-import { protectedProcedure, router } from "./_core/trpc";
+import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { getDb } from "./db";
 import { commandHistory } from "../drizzle/schema";
@@ -9,7 +9,7 @@ import { desc } from "drizzle-orm";
 const execAsync = promisify(exec);
 
 export const terminalRouter = router({
-  execute: protectedProcedure
+  execute: publicProcedure
     .input(
       z.object({
         command: z.string(),
@@ -69,7 +69,7 @@ export const terminalRouter = router({
       }
     }),
 
-  getHistory: protectedProcedure
+  getHistory: publicProcedure
     .input(
       z.object({
         limit: z.number().default(50),
