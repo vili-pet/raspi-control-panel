@@ -25,4 +25,33 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+/**
+ * Command history for terminal sessions
+ */
+export const commandHistory = mysqlTable("commandHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  command: text("command").notNull(),
+  output: text("output"),
+  exitCode: int("exitCode"),
+  executedAt: timestamp("executedAt").defaultNow().notNull(),
+});
+
+export type CommandHistory = typeof commandHistory.$inferSelect;
+export type InsertCommandHistory = typeof commandHistory.$inferInsert;
+
+/**
+ * Service configurations and status tracking
+ */
+export const services = mysqlTable("services", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  displayName: varchar("displayName", { length: 255 }).notNull(),
+  description: text("description"),
+  autoStart: int("autoStart").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Service = typeof services.$inferSelect;
+export type InsertService = typeof services.$inferInsert;
