@@ -9,7 +9,8 @@ type UseAuthOptions = {
 };
 
 export function useAuth(options?: UseAuthOptions) {
-  const { redirectOnUnauthenticated = false, redirectPath = getLoginUrl() } =
+  const isStandalone = import.meta.env.VITE_OAUTH_PORTAL_URL === 'disabled';
+  const { redirectOnUnauthenticated = false, redirectPath = isStandalone ? '/' : getLoginUrl() } =
     options ?? {};
   const utils = trpc.useUtils();
 

@@ -11,6 +11,8 @@ import "./index.css";
 const queryClient = new QueryClient();
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
+  // In standalone mode, skip auth redirects
+  if (import.meta.env.VITE_OAUTH_PORTAL_URL === 'disabled') return;
   if (!(error instanceof TRPCClientError)) return;
   if (typeof window === "undefined") return;
 
