@@ -25,3 +25,8 @@
 - [x] Test real-time updates
 - [x] Create deployment guide for Raspberry Pi
 - [x] Document setup instructions
+
+## Standalone Deployment
+- [x] Remove OAuth dependency for standalone Raspberry Pi deployment
+- [x] Make authentication optional when OAUTH_SERVER_URL is disabled
+- [ ] Test application works without Manus services
